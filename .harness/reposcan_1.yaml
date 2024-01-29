@@ -1,0 +1,36 @@
+template:
+  name: repo-scan
+  identifier: reposcan
+  versionLabel: "1"
+  type: Stage
+  projectIdentifier: anmolpsandbox
+  orgIdentifier: default
+  tags: {}
+  spec:
+    type: SecurityTests
+    spec:
+      cloneCodebase: true
+      infrastructure:
+        type: KubernetesDirect
+        spec:
+          connectorRef: <+variable.k8scluster>
+          namespace: <+variable.delegate_namespace>
+          automountServiceAccountToken: true
+          nodeSelector: {}
+          os: Linux
+      execution:
+        steps:
+          - step:
+              type: Bandit
+              name: Bandit_1
+              identifier: Bandit_1
+              spec:
+                mode: orchestration
+                config: default
+                target:
+                  type: repository
+                  name: <+input>
+                  variant: branch:main
+                advanced:
+                  log:
+                    level: info
