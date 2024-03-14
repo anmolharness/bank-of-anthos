@@ -1,0 +1,22 @@
+template:
+  name: example-template
+  type: Step
+  projectIdentifier: anmolpsandbox
+  orgIdentifier: default
+  spec:
+    type: ShellScript
+    spec:
+      shell: Bash
+      executionTarget: {}
+      source:
+        type: Inline
+        spec:
+          script: |-
+
+            echo "env: " <+env.identifier>
+      environmentVariables: []
+      outputVariables: []
+      delegateSelectors: []
+    timeout: 10m
+  identifier: exampletemplate
+  versionLabel: "1"
