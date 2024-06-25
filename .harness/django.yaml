@@ -1,0 +1,111 @@
+pipeline:
+  name: django
+  identifier: django
+  projectIdentifier: anmolpsandbox
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: githubconnector
+        repoName: Django-Pizza-Delivery
+        build: <+input>
+  stages:
+    - stage:
+        name: django
+        identifier: django
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: account.sacluster
+              namespace: default
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: tests
+                  identifier: tests
+                  spec:
+                    connectorRef: account.harnessImage
+                    image: python:latest
+                    shell: Sh
+                    command: |-
+                      # Install dependencies.
+                      python3 create-test-txt.py
+                      cat test_classes.txt
+                      pip install pytest pytest-django pytest-cov unittest-xml-reporting
+                      pip install -r requirements.txt
+                      pip install coverage
+
+
+                      # Call split_tests, define splitting strategy, and generate the list of test files.
+                      #CLASSES=`/addon/bin/split_tests --split-by testsuite_timing --file-path test_classes.txt`
+                        
+                      python -m xmlrunner discover -t . -o /harness
+                      # export FILES
+                      # # Use the test files list as input for pytest and produce results in JUnit XML format.
+                      # pytest --junitxml="result.xml" || true
+                      # echo <+pipeline.name>
+                      #coverage run manage.py test $CLASSES||true
+
+                      ls -al
+                    envVariables:
+                      HARNESS_NODE_INDEX: <+strategy.iteration>
+                      HARNESS_NODE_TOTAL: <+strategy.iterations>
+                      DJANGO_SETTINGS_MODULE: epizza.settings
+                      SECRET_KEY: jkL0pRQx9yZ
+                      STRIPE_PUBLISHABLE_KEY: jkL0pRQx9yZ
+                      STRIPE_SECRET_KEY: jkL0pRQx9yZ
+                    outputVariables:
+                      - name: FILES
+                  failureStrategies:
+                    - onFailure:
+                        errors:
+                          - AllErrors
+                        action:
+                          type: Ignore
+                  when:
+                    stageStatus: Success
+              - step:
+                  type: Run
+                  name: Run_2
+                  identifier: Run_2
+                  spec:
+                    connectorRef: account.harnessImage
+                    image: python
+                    shell: Sh
+                    command: la -al
+          caching:
+            enabled: false
+            paths: []
+        delegateSelectors:
+          - bank-of-harness-delegate
+    - stage:
+        name: combine
+        identifier: combine
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          infrastructure:
+            useFromStage: django
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Run_1
+                  identifier: Run_1
+                  spec:
+                    connectorRef: account.harnessImage
+                    image: cloud-sdk
+                    shell: Sh
+                    command: |-
+                      gsutil cp bank-of-harness/coveragefiles/* .
+                      ls -al
