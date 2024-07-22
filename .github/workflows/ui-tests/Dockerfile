@@ -9,7 +9,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM cypress/included:13.6.6@sha256:376a360b6e75acb09cc13ca278ea1b6e7e95b14d0cf9134578c18d30115876b4
+FROM cypress/included:13.13.0@sha256:f9733a2cadc3aa270e40f8ce1158a23cb99703476a9db7154b4ecc51ba02bd5c
 
 WORKDIR /e2e
 COPY . .
@@ -19,7 +19,7 @@ RUN apt-get update
 RUN apt-get install -y curl gpg
 
 # install gcloud cli tools to get kubectl context and service/ingress endpoint ip to test
-RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && apt-get update -y && apt-get install google-cloud-cli -y
+RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && apt-get update -y && apt-get install google-cloud-cli -y
 
 # RUN apt-get update
 RUN apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin kubectl curl
