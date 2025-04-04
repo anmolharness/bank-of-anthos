@@ -31,18 +31,15 @@ pipeline:
           execution:
             steps:
               - step:
-                  type: Run
-                  name: Run_1
-                  identifier: Run_1
+                  type: Semgrep
+                  name: Semgrep_1
+                  identifier: Semgrep_1
                   spec:
-                    shell: Sh
-              - stepGroup:
-                  name: step-group-template
-                  identifier: stepgrouptemplate
-                  steps:
-                    - step:
-                        type: Run
-                        name: Run_2
-                        identifier: Run_2
-                        spec:
-                          shell: Sh
+                    mode: orchestration
+                    config: default
+                    target:
+                      type: repository
+                      detection: auto
+                    advanced:
+                      log:
+                        level: info
