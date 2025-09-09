@@ -85,8 +85,8 @@ spec:
         secret:
           secretName: jwt-key
           items:
-
-          
+          - key: akjdgaskdgsad
+            path: dsadsadsad
           - key: jwtRS256.key.pub
             path: publickey
 ---
