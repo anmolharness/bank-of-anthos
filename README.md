@@ -1,4 +1,4 @@
-# Bank of Anthos
+# Bank of Anthos STO AXA DEMO
 
 <!-- @todo: https://github.com/badges/shields/pull/7759 -->
 <!-- ![GitHub branch checks state](https://img.shields.io/github/checks-status/GoogleCloudPlatform/bank-of-anthos/main)-->
