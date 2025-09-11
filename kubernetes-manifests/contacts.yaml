@@ -75,8 +75,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: environment-config
-            - configMapRef:
-                name: accounts-db-config
           image: us-central1-docker.pkg.dev/bank-of-anthos-ci/bank-of-anthos/contacts:v0.6.3@sha256:fdcfe0317faba7d32d4d14502d99c85170118df8414be8589ef452c7202e90d7
           name: contacts
           readinessProbe:
