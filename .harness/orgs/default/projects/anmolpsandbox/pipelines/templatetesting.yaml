@@ -1,0 +1,16 @@
+pipeline:
+  name: template-testing
+  identifier: templatetesting
+  tags: {}
+  template:
+    templateRef: marnustest
+    versionLabel: "1"
+    templateInputs:
+      properties:
+        ci:
+          codebase:
+            connectorRef: <+input>
+            repoName: <+input>
+            build: <+input>
+  projectIdentifier: anmolpsandbox
+  orgIdentifier: default
